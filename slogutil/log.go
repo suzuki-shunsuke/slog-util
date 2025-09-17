@@ -8,15 +8,27 @@ import (
 	"os"
 
 	"github.com/lmittmann/tint"
+	"github.com/mattn/go-colorable"
 )
+
+type InputNew struct {
+	Name    string
+	Version string
+	Level   slog.Level
+	Out     *os.File
+}
 
 // New creates a new structured logger with the specified version and log level.
 // The logger outputs to stderr with colored formatting using tint handler.
 // It includes "program" and "version" attributes in all log entries.
-func New(name, version string, level slog.Level) *slog.Logger {
-	return slog.New(tint.NewHandler(os.Stderr, &tint.Options{
-		Level: level,
-	})).With("program", name, "version", version)
+func New(input *InputNew) *slog.Logger {
+	out := input.Out
+	if out == nil {
+		out = os.Stderr
+	}
+	return slog.New(tint.NewHandler(colorable.NewColorable(out), &tint.Options{
+		Level: input.Level,
+	})).With("program", input.Name, "version", input.Version)
 }
 
 // ErrUnknownLogLevel is returned when an invalid log level string is provided to ParseLevel.
