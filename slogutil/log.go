@@ -14,7 +14,7 @@ import (
 type InputNew struct {
 	Name    string
 	Version string
-	Level   slog.Level
+	Level   slog.Leveler
 	Out     *os.File
 }
 
