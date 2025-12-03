@@ -34,10 +34,16 @@ func New(input *InputNew) *slog.Logger {
 // ErrUnknownLogLevel is returned when an invalid log level string is provided to ParseLevel.
 var ErrUnknownLogLevel = errors.New("unknown log level")
 
-// ParseLevel converts a string log level to slog.Level.
-// Supported levels are: "debug", "info", "warn", "error".
-// Returns ErrUnknownLogLevel if the level string is not recognized.
-func ParseLevel(lvl string) (slog.Level, error) {
+func SetLevel(levelVar *slog.LevelVar, level string) error {
+	lvl, err := parseLevel(level)
+	if err != nil {
+		return err
+	}
+	levelVar.Set(lvl)
+	return nil
+}
+
+func parseLevel(lvl string) (slog.Level, error) {
 	switch lvl {
 	case "debug":
 		return slog.LevelDebug, nil
