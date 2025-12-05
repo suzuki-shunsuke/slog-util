@@ -35,6 +35,9 @@ func New(input *InputNew) *slog.Logger {
 var ErrUnknownLogLevel = errors.New("unknown log level")
 
 func SetLevel(levelVar *slog.LevelVar, level string) error {
+	if level == "" {
+		return nil
+	}
 	lvl, err := parseLevel(level)
 	if err != nil {
 		return err
