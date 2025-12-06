@@ -14,7 +14,8 @@ import (
 )
 
 type Logger struct {
-	logger    *slog.Logger
+	*slog.Logger
+
 	level     *slog.LevelVar
 	tintOpts  *tint.Options
 	autoColor bool
@@ -46,13 +47,9 @@ func New(input *InputNew) *Logger {
 		w = colorable.NewColorable(out)
 	}
 	return &Logger{
-		logger:    slog.New(tint.NewHandler(w, input.TintOptions)).With("program", input.Name, "version", input.Version),
+		Logger:    slog.New(tint.NewHandler(w, input.TintOptions)).With("program", input.Name, "version", input.Version),
 		level:     levelVar,
 		tintOpts:  input.TintOptions,
 		autoColor: autoColor,
 	}
-}
-
-func (l *Logger) Logger() *slog.Logger {
-	return l.logger
 }
