@@ -28,15 +28,18 @@ func (l *Logger) SetColor(color string) error {
 	case ColorAuto:
 		l.tintOpts.NoColor = !l.autoColor
 	}
+	l.rebuildHandler()
 	return nil
 }
 
 func (l *Logger) EnableColor() {
 	l.tintOpts.NoColor = false
+	l.rebuildHandler()
 }
 
 func (l *Logger) DisableColor() {
 	l.tintOpts.NoColor = true
+	l.rebuildHandler()
 }
 
 var ErrUnknownColorMode = errors.New("unknown color mode")

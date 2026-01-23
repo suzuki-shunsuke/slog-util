@@ -19,6 +19,8 @@ type Logger struct {
 	level     *slog.LevelVar
 	tintOpts  *tint.Options
 	autoColor bool
+	out       io.Writer
+	attrs     []any
 }
 
 type InputNew struct {
@@ -46,10 +48,17 @@ func New(input *InputNew) *Logger {
 	if runtime.GOOS == "windows" {
 		w = colorable.NewColorable(out)
 	}
+	attrs := []any{"program", input.Name, "version", input.Version}
 	return &Logger{
-		Logger:    slog.New(tint.NewHandler(w, input.TintOptions)).With("program", input.Name, "version", input.Version),
+		Logger:    slog.New(tint.NewHandler(w, input.TintOptions)).With(attrs...),
 		level:     levelVar,
 		tintOpts:  input.TintOptions,
 		autoColor: autoColor,
+		out:       w,
+		attrs:     attrs,
 	}
+}
+
+func (l *Logger) rebuildHandler() {
+	l.Logger = slog.New(tint.NewHandler(l.out, l.tintOpts)).With(l.attrs...)
 }
