@@ -28,6 +28,7 @@ type InputNew struct {
 	Version     string
 	Out         *os.File
 	TintOptions *tint.Options
+	Attrs       []any
 }
 
 // New creates a new structured logger with the specified version and log level.
@@ -48,7 +49,7 @@ func New(input *InputNew) *Logger {
 	if runtime.GOOS == "windows" {
 		w = colorable.NewColorable(out)
 	}
-	attrs := []any{"program", input.Name, "version", input.Version}
+	attrs := append([]any{"program", input.Name, "version", input.Version}, input.Attrs...)
 	return &Logger{
 		Logger:    slog.New(tint.NewHandler(w, input.TintOptions)).With(attrs...),
 		level:     levelVar,
