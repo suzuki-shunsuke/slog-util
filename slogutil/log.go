@@ -51,7 +51,7 @@ func New(input *InputNew) *Logger {
 	}
 	attrs := append([]any{"program", input.Name, "version", input.Version}, input.Attrs...)
 	return &Logger{
-		Logger:    slog.New(tint.NewHandler(w, input.TintOptions)).With(attrs...),
+		Logger:    slog.New(tint.NewTextHandler(w, input.TintOptions)).With(attrs...),
 		level:     levelVar,
 		tintOpts:  input.TintOptions,
 		autoColor: autoColor,
@@ -61,5 +61,5 @@ func New(input *InputNew) *Logger {
 }
 
 func (l *Logger) rebuildHandler() {
-	l.Logger = slog.New(tint.NewHandler(l.out, l.tintOpts)).With(l.attrs...)
+	l.Logger = slog.New(tint.NewTextHandler(l.out, l.tintOpts)).With(l.attrs...)
 }
